@@ -12,42 +12,51 @@ export class FeedComponent implements OnInit {
   key = 'data'
   reverse = true
 
-  listaPostagens: Postagem []
+  listaPostagens: Postagem[]
 
   postagem: Postagem = new Postagem
 
-  alerta:boolean = false
+  alerta: boolean = false
+
+  titulo: string
 
   constructor(private postagemService: PostagemService) { }
 
   ngOnInit() {
     this.findallPostagens()
-  
+
     let item: string = localStorage.getItem('delOk')
-    if (item == "true"){
+    if (item == "true") {
       this.alerta = true
       localStorage.clear()
 
-      setTimeout(()=>{
+      setTimeout(() => {
         location.assign('/feed')
       }, 3000)
-      
+
     }
 
-  window.scroll(0,0)
+    window.scroll(0, 0)
 
   }
- 
-  findallPostagens(){
-    this.postagemService.getAllPostagens().subscribe((resp: Postagem[])=>{
+
+  findallPostagens() {
+    this.postagemService.getAllPostagens().subscribe((resp: Postagem[]) => {
       this.listaPostagens = resp
     })
   }
 
-  publicar(){
-    this.postagemService.postPostagem(this.postagem).subscribe((resp: Postagem)=>{
+  publicar() {
+    this.postagemService.postPostagem(this.postagem).subscribe((resp: Postagem) => {
       this.postagem = resp
       location.assign('/feed')
     })
   }
+
+  pesquisarPorTitulo(){
+    this.postagemService.findByTitulo(this.titulo).subscribe((resp: Postagem[])=>{
+      this.listaPostagens = resp
+    })
+  }
+
 }
